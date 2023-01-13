@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ImageManagementController;
+use App\Http\Controllers\ImageManagementTableController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -22,9 +22,9 @@ use App\Http\Controllers\UserController;
 */
 Route::post("login",[UserController::class,'index']);
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/images', [ImageManagementController::class, 'index']);
-    Route::post('/images', [ImageManagementController::class, 'store']);
-    Route::get('/images/{image}', [ImageManagementController::class, 'show']);
-    Route::put('/images/{image}', [ImageManagementController::class, 'update']);
-    Route::delete('/images/{image}', [ImageManagementController::class, 'destroy']);
+    Route::get('/images', [ImageManagementTableController::class, 'index']);
+    Route::post('/images', [ImageManagementTableController::class, 'store']);
+    Route::get('/images/{image}', [ImageManagementTableController::class, 'show']);
+    Route::put('/images/{image}', [ImageManagementTableController::class, 'update']);
+    Route::delete('/images/{image}', [ImageManagementTableController::class, 'destroy']);
 });

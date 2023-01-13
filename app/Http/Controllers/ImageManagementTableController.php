@@ -16,7 +16,7 @@ class ImageManagementTableController extends Controller
     public function index()
     {
         //
-        return ImageManagement::all();
+        return image_management_table::all();
     }
 
     /**
@@ -37,17 +37,30 @@ class ImageManagementTableController extends Controller
      */
     public function store(Request $request)
     {
+        $url= url()->previous();
+
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'image_url' => 'required|url',
+            'img' => 'required|mimes:jpg,jpeg,png',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
 
-        $image = ImageManagement::create($request->all());
+        $ffname = $request->file('img')->getClientOriginalName();
+
+        $fpath = $request->img->move(('storage/user_img'), $ffname);
+
+        $finaln= "/storage/user_img/". $ffname;
+
+        $image = image_management_table::create([
+            'title'=>$request->title,
+            'description'=>$request->description,
+            'image_url'=>$request->$finaln
+
+        ]);
 
         return response()->json($image, 201);
     }
@@ -60,7 +73,7 @@ class ImageManagementTableController extends Controller
      */
     public function show(image_management_table $image_management_table)
     {
-        return $imageManagement;
+        return $image_management_table;
     }
 
     /**
@@ -86,16 +99,16 @@ class ImageManagementTableController extends Controller
         $validator = Validator::make($request->all(),[
             'title' => 'string|max:255',
             'description' => 'string',
-            'image_url' => 'url',
+            'img' => 'required|mimes:jpg,jpeg,png',
             ]);
 
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 400);
             }
         
-            $imageManagement->update($request->all());
+            $image_management_table->update($request->all());
         
-            return response()->json($imageManagement, 200);
+            return response()->json($image_management_table, 200);
     }
 
     /**
@@ -106,7 +119,7 @@ class ImageManagementTableController extends Controller
      */
     public function destroy(image_management_table $image_management_table)
     {
-        $imageManagement->delete();
+        $image_management_table->delete();
 
     return response()->json(null, 204);
     }
