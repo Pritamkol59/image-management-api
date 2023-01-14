@@ -22,9 +22,10 @@ use App\Http\Controllers\UserController;
 */
 Route::post("login",[UserController::class,'index']);
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/images', [ImageManagementTableController::class, 'index']);
-    Route::post('/images', [ImageManagementTableController::class, 'store']);
-    Route::get('/images/{image}', [ImageManagementTableController::class, 'show']);
-    Route::put('/images/{image}', [ImageManagementTableController::class, 'update']);
-    Route::delete('/images/{image}', [ImageManagementTableController::class, 'destroy']);
+    Route::get('images', [ImageManagementTableController::class, 'index']);
+    Route::post('cimages', [ImageManagementTableController::class, 'store']);//post (title,description,img(file))
+    Route::get('images/{id}', [ImageManagementTableController::class, 'show']);
+    Route::post('imagesup', [ImageManagementTableController::class, 'update']);//post (id,title,description,img(file))
+    Route::post('imgdel/{id}', [ImageManagementTableController::class, 'destroy']);
 });
+
