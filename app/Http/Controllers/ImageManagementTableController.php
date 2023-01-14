@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\image_management_table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ImageManagementTableController extends Controller
 {
@@ -18,7 +19,11 @@ class ImageManagementTableController extends Controller
         //
         $saver= image_management_table::all();
 
-        return response()->json($saver,201);
+        $response=[
+            
+            'data'=> $saver
+        ];
+        return response()->json($response,201);
 
         
     }
@@ -52,8 +57,9 @@ class ImageManagementTableController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-
-        $ffname = $request->file('img')->getClientOriginalName();
+      
+        $randomString = Str::random(7);
+        $ffname =$randomString.$request->file('img')->getClientOriginalName();
 
         $fpath = $request->img->move(('storage/user_img'), $ffname);
 
@@ -66,7 +72,11 @@ class ImageManagementTableController extends Controller
 
         ]);
 
-        return response()->json($image, 201);
+        $response=[
+           
+            'data'=> $image
+        ];
+        return response()->json($response, 201);
     }
 
     /**
@@ -79,12 +89,23 @@ class ImageManagementTableController extends Controller
     {
         if($saver= image_management_table::where(['id'=>$image_management_table])->first()){
 
-            return response()->json($saver,201);
+            $response=[
+           
+                'data'=> $saver
+            ];
+
+            return response()->json($response,201);
 
         }
 
         else{
-            return response()->json("no img found", 400);
+
+            $response=[
+           
+                'data'=> "no img found"
+            ];
+
+            return response()->json($response, 400);
 
         }
     }
@@ -126,8 +147,8 @@ class ImageManagementTableController extends Controller
 
                 
                     unlink($saver->image_url);
-
-                    $ffname = $request->file('img')->getClientOriginalName();
+                    $randomString = Str::random(7);
+                    $ffname = $randomString.$request->file('img')->getClientOriginalName();
 
         $fpath = $request->img->move(('storage/user_img'), $ffname);
 
@@ -139,17 +160,24 @@ class ImageManagementTableController extends Controller
         $saver->image_url=$finaln;
 
         $saver->save();
-        return response()->json($saver, 200);
+        $response=[
+            
+            'data'=> $saver
+        ];
+        return response()->json($response, 200);
 
                 }
 
                 else{
 
-                    
+                    $response=[
+            
+                        'data'=> "no img found"
+                    ];
 
                     
         
-                    return response()->json("no img found", 400);
+                    return response()->json($response, 400);
 
                 }
            
@@ -164,13 +192,24 @@ class ImageManagementTableController extends Controller
     public function destroy(Request $request, $image_management_table)
     {
         if($saver= image_management_table::where(['id'=>$image_management_table])->first()){
-
+            unlink($saver->image_url);
             $saver->delete();
-            return response()->json("Img delet Successfull", 204);
+
+            $response=[
+            
+                'data'=> "Img delet Successfull"
+            ];
+
+            return response()->json($response, 204);
         }
         else{
 
-            return response()->json("No img Found for Delete", 400);
+            $response=[
+            
+                'data'=> "No img Found for Delete"
+            ];
+
+            return response()->json($response, 400);
         }
 
 
